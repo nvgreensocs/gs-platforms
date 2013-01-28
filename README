@@ -110,3 +110,16 @@ A GSProject has the following structure:
 	    toplevel		<--- cookbook to build the top level of this project
 	    versions		<--- special cookbook to specify versions for all cookbooks
 
+
+
+MAKING A NEW GSPROJECT
+=========================
+
+Make a directory for your new project, add it to a git repository
+
+%> git submodule add git://git.greensocs.com/GSProject GSProject
+make a directory for the cookbooks,
+Add a cookbook for the toplevel (called toplevel)
+Add a cookbook for versions (called versions)
+git submodule add git://git.greensocs.com/chef_<cookbook> cookbooks/chef_<cookbook>
+    for each cookbook being used
