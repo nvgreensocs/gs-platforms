@@ -1,6 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+#  -------    GS Project Vagrantfile  --------
+
+# LICENSETEXT
+# 
+#   Copyright (C) 2012 : GreenSocs Ltd
+#       http://www.greensocs.com/ , email: info@greensocs.com
+# 
+# The contents of this file are subject to the licensing terms specified
+# in the file LICENSE. Please consult this file for restrictions and
+# limitations that may apply.
+# 
+# ENDLICENSETEXT
+
 
 require 'open-uri'
 require 'fileutils'

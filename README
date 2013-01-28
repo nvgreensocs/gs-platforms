@@ -1,0 +1,112 @@
+
+# LICENSETEXT
+# 
+#   Copyright (C) 2012 : GreenSocs Ltd
+#       http://www.greensocs.com/ , email: info@greensocs.com
+# 
+# The contents of this file are subject to the licensing terms specified
+# in the file LICENSE. Please consult this file for restrictions and
+# limitations that may apply.
+# 
+# ENDLICENSETEXT
+
+
+README  for GSProject based project distributions
+=======================================
+
+
+GSProject uses Vagrant to help distribute projects. Vagrant is a
+wrapper arroung VirtualBox, which provides virtual machines.
+
+vagrant is documented on the web site: http://www.vagrantup.com/
+
+GSProjects VM's  ensure that the user environment is always consistent.
+
+You may distribute a GSProject VM to 3rd parties to ensure consistent
+environemnts between yourself and your suppliers.
+
+In the case where you align the GSProject environment with your actual
+hardware, you may distribute the VM to ensure consistent
+environments, but only ship the results of binaries built on the VM
+and use them on your actual hardware.
+
+GSProjects use 'cookbooks' to compile and build the componets of a
+Project. These are interpreted, within the VM, by a tool called
+chef. Chef is documented on the web page: http://www.opscode.com/chef/
+
+USER COMMANDS
+================
+
+Please install vagrant and it's dependencies - follow the directions
+on http://www.vagrantup.com/.
+
+unpack the tar file for this project:
+%> tar -zxf <GSProject name File.tar.gz>
+
+cd into the resulting directory:
+
+%> cd <GSProject name>
+
+then simply run
+%> vagrant up
+
+This will build the entire virtual machine, and the files assosciated
+with this GSProject.
+
+ADVANCED COMMANDS
+======================
+
+vagrant up		this command will initialize a VM and build
+		all the elements of a project
+
+vagrant provision	this will re-initialize the build phase
+		normally run by vagrant up
+
+NOTE: a running VM will 'shut down' automatically after it has been
+idle for some time. This is for your convenience and to prevent
+exsessive memory and CPU usage of idle VMs.
+
+vagrant run <command>
+		this very poswerful command will run <command> from
+		within the VM. This command can be run from within the directory
+		structure of the Project and the command will be run in that same
+		directory within the VM.
+
+vagrant ssh	 Log into the VM (In general this is not required, as
+		 vagrant run can be used)
+
+
+vagrant halt	 Stop a VM
+
+vagrant destroy	 Destroy and remove a VM
+
+vagrant upgrade [<tar ball>]
+		This command will halt, and destroy and existing VM,
+		 and then either update the project from a git
+		 repository or from the tar-ball if one is given on the command
+		 line. The resulting Project will then be re-initialized (equivelent of
+		 vagrant up).
+
+NEVER DELETE A GSPROJECT WITHOUT FIRST RUNNING : vagrant destroy
+
+
+DIRECTORY ORGANIZATION
+=========================
+
+NOTE: Both Vagrant and VirtualBox stores some of their files within
+the users home directory. This is documented on their web sites. Care
+should be taken to use vagrant destory if a VM is to be removed.
+
+A GSProject has the following structure:
+
+<GSProject Home>    <--- this directory is available within the VM as /vagrant/
+	   GSProject/	<--- files common to all GSProjects
+	    Platform	<--- Top level model code
+	    ModelLibrary	<--- Model component library (Built during VM initialization)
+	    Vagrantfile	This file specifies what elements
+			('cookbooks') are required for this project. It also specifies the
+			basic machine (e.g. 32 or 64 bit), and the memory size.
+	    cookbooks	<--- cookbooks needed for this Project
+	    toplevel		<--- cookbook to build the top level of this project
+	    versions		<--- special cookbook to specify versions for all cookbooks
+
