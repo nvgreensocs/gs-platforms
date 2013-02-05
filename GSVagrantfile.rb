@@ -223,6 +223,8 @@ Vagrant::Config.run do |config|
 	exit -1
       end
 
+      chef.json = {:prefix => "/vagrant"}
+
       chef.cookbooks_path = ["cookbooks", "."]
 
       chef.http_proxy = http_proxy;
