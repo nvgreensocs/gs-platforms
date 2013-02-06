@@ -14,6 +14,10 @@
 README  for GSProject based project distributions
 =======================================
 
+There are 2 ways of building a GSPoject distribution. The recommended
+way is using a Virtual Machine. An alternative is to build on your
+host machine, but then there is no guarantee that the librarys etc
+will be compatible.
 
 GSProject uses Vagrant to help distribute projects. Vagrant is a
 wrapper arroung VirtualBox, which provides virtual machines.
@@ -111,6 +115,19 @@ A GSProject has the following structure:
 	    versions		<--- special cookbook to specify versions for all cookbooks
 
 
+BUILDING ON YOUR HOST
+=======================
+
+Before you start, you will need to ensure that chef and chef-solo are
+installed (see http://www.opscode.com/ for more infomation).
+
+You will then be able to run, from within your <GSProject Home> directory:
+
+%> chef-solo -c ./Vagrantfile 
+
+
+
+
 
 MAKING A NEW GSPROJECT
 =========================
@@ -123,3 +140,32 @@ Add a cookbook for the toplevel (called toplevel)
 Add a cookbook for versions (called versions)
 git submodule add git://git.greensocs.com/chef_<cookbook> cookbooks/chef_<cookbook>
     for each cookbook being used
+
+At the top level, include a file called Vagrantfile
+Here is an example:
+--------------------------- Vagrantfile ---------------
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+pwd=File.dirname(File.expand_path(__FILE__))
+require "#{pwd}/GSProject/GSVagrantFile.rb"
+
+cookbooks=[
+  "chef-amba-kit",
+  "chef-systemc",
+  "chef-greenlib",
+  "chef-gem5",
+  "chef-ACESlave"
+];
+
+versions = "versions";
+toplevel = "toplevel";
+
+memory = "2048";
+
+box = "GreenSocsBaseMachine32Bit15Jan13"
+#box = "GreenSocsBaseMachine64Bit28Jan13"
+
+
+GSProject.new(box,cookbooks, versions, toplevel, memory).run 
+---------------------------
