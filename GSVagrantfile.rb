@@ -14,7 +14,7 @@
 # 
 # ENDLICENSETEXT
 
-inVagrant = !!Module.const_get(Vagrant) rescue false
+inVagrant = !!Module.const_get('Vagrant') rescue false
 if inVagrant
 
   require 'open-uri'
@@ -74,7 +74,7 @@ if inVagrant
       env.cli("halt");
       env.cli("destroy");
       
-      FileUtils.rm_rf (dir+File::SEPARATOR+"ModelLibrary")
+      FileUtils.rm_rf(dir+File::SEPARATOR+"ModelLibrary")
 
       if @tarball && File.exists?(@tarball)
 	tgz = Zlib::GzipReader.new(File.open(@tarball, 'rb'))
@@ -110,7 +110,7 @@ class GSProject
 
   def run
 
-    inVagrant = !!Module.const_get(Vagrant) rescue false
+    inVagrant = !!Module.const_get('Vagrant') rescue false
     if inVagrant
 
       Vagrant::Config.run do |config|
