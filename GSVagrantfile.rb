@@ -266,7 +266,7 @@ class GSProject
 	f.puts '{"run_list": ['
 	@cookbooks.each {|c| f.puts "\"recipe[#{c}]\","}
 	f.puts "\"recipe[#{@toplevel}]\""
-	f.puts '],     "prefix":"/vagrant"}'
+	f.puts "],     \"prefix\":\"#{pwd}\"}"
       end
      
     end
