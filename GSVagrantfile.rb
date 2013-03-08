@@ -249,6 +249,7 @@ class GSProject
 	  end
 	end
 
+	config.ssh.forward_x11 = true
 
 	config.vm.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
 
