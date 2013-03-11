@@ -24,8 +24,8 @@ if inVagrant
   include Archive::Tar
 
 
-
   class SSHExecuteCommand < Vagrant::Command::Base
+    include Vagrant::Util::SafeExec
     def help
       abort("Usage: vagrant run <command> [options...]")
     end
@@ -41,15 +41,69 @@ if inVagrant
 
       pwddir=pwddir.join(File::SEPARATOR);
 
+      env.primary_vm.config.ssh.forward_x11 = true
+
       env.cli("up") if !env.primary_vm.created?
       env.cli("up","--no-provision") if !env.primary_vm.channel.ready?
 
-      command="cd /vagrant/#{pwddir};"+@sub_command + " " + @sub_args.join(" ")
-      env.primary_vm.channel.execute(command) do |type, data|
-	puts data
+      command="for i in /vagrant/bash.profile.d/*; do . $i; done;"+
+	"cd /vagrant/#{pwddir};"+
+	@sub_command + " " + @sub_args.join(" ")
+
+      ssh=Vagrant::SSH.new(env.primary_vm)
+      
+      # Get the SSH information and cache it here
+      ssh_info = ssh.info
+      opts={}
+
+      if Vagrant::Util::Platform.windows?
+        raise Errors::SSHUnavailableWindows, :host => ssh_info[:host],
+                                             :port => ssh_info[:port],
+                                             :username => ssh_info[:username],
+                                             :key_path => ssh_info[:private_key_path]
       end
 
+      raise Errors::SSHUnavailable if !Kernel.system("which ssh > /dev/null 2>&1")
+
+      # If plain mode is enabled then we don't do any authentication (we don't
+      # set a user or an identity file)
+      plain_mode = opts[:plain_mode]
+
+      options = {}
+      options[:host] = ssh_info[:host]
+      options[:port] = ssh_info[:port]
+      options[:username] = ssh_info[:username]
+      options[:private_key_path] = ssh_info[:private_key_path]
+
+      # Command line options
+      command_options = ["-p", options[:port].to_s, "-o", "UserKnownHostsFile=/dev/null",
+                         "-o", "StrictHostKeyChecking=no", "-o", "LogLevel=ERROR"]
+
+      # Solaris/OpenSolaris/Illumos uses SunSSH which doesn't support the IdentitiesOnly option
+      command_options += ["-o", "IdentitiesOnly=yes"] unless Vagrant::Util::Platform.solaris?
+
+      command_options += ["-i", options[:private_key_path]] if !plain_mode
+      command_options += ["-o", "ForwardAgent=yes"] if ssh_info[:forward_agent]
+
+      # If there are extra options, then we append those
+#      command_options.concat(opts[:extra_args]) if opts[:extra_args]
+
+      if ssh_info[:forward_x11]
+        # Both are required so that no warnings are shown regarding X11
+        command_options += ["-o", "ForwardX11=yes"]
+        command_options += ["-o", "ForwardX11Trusted=yes"]
+      end
+
+      host_string = options[:host]
+      host_string = "#{options[:username]}@#{host_string}" if !plain_mode
+      command_options << host_string
+
+      command_options += [command]
+
+      @logger.info("Invoking SSH: #{command_options.inspect}")
+      safe_exec("ssh", *command_options)
     end
+
   end
 
   class UpgradeExecuteCommand < Vagrant::Command::Base
