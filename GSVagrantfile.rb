@@ -292,7 +292,6 @@ class GSProject
 	    chef.http_proxy = http_proxy;
 	    chef.https_proxy=http_proxy;
 	    chef.add_recipe("chef-http_proxy");
-	    chef.add_recipe("apt");
 	    chef.add_recipe(@versions);
 
 	    @cookbooks.each {|c| chef.add_recipe(c)};
