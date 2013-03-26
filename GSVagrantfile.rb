@@ -317,10 +317,13 @@ class GSProject
     else
       
       pwd=File.dirname(File.dirname(File.expand_path(__FILE__)))
-      Chef::Config[:file_cache_path]="/tmp/"
+      Chef::Config[:file_cache_path]="#{pwd}/tmp/"
       Chef::Config[:cookbook_path]=["#{pwd}/cookbooks", "#{pwd}/"]
-      Chef::Config[:json_attribs] = "/tmp/dna.json"
-      File.open("/tmp/dna.json", mode='w') do |f|
+      Chef::Config[:json_attribs] = "#{pwd}/tmp/dna.json"
+      FileUtils.mkdir_p '#{pwd}/tmp'
+      FileUtils.mkdir_p '#{pwd}/bash.profile.d'
+      FileUtils.touch '#{pwd}/bash.profile.d/empty'
+      File.open("#{pwd}/tmp/dna.json", mode='w') do |f|
 	f.puts '{"run_list": ['
 	@cookbooks.each {|c| f.puts "\"recipe[#{c}]\","}
 	f.puts "\"recipe[#{@toplevel}]\""
