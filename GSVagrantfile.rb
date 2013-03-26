@@ -200,8 +200,8 @@ class GSProject
 	#    config.vm.network :bridged, { bridge: 'eth0', nic_type: 'virtio', auto_config: false }
 
 
-	config.vm.customize(["modifyvm", :id, "--nictype1", "virtio"])
-
+#	config.vm.customize(["modifyvm", :id, "--nictype1", "virtio"])
+	config.vm.customize(["modifyvm", :id, "--nictype1", "Am79C970A"])
 
 	# Forward a port from the guest to the host, which allows for outside
 	# computers to access the VM, whereas host only networking does not.
@@ -292,11 +292,15 @@ class GSProject
 	    chef.http_proxy = http_proxy;
 	    chef.https_proxy=http_proxy;
 	    chef.add_recipe("chef-http_proxy");
-	    chef.add_recipe(@versions);
+	    if @versions && @versions !=""
+	      chef.add_recipe(@versions);
+	    end
 
 	    @cookbooks.each {|c| chef.add_recipe(c)};
 
-	    chef.add_recipe(@toplevel);
+	    if @toplevel && @toplevel!=""
+	      chef.add_recipe(@toplevel);
+	    end
 
 	    chef.add_recipe("chef-autoshutdown");
 	  end
