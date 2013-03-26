@@ -201,7 +201,7 @@ class GSProject
 
 
 #	config.vm.customize(["modifyvm", :id, "--nictype1", "virtio"])
-	config.vm.customize(["modifyvm", :id, "--nictype1", "Am79C970A"])
+	config.vm.customize(["modifyvm", :id, "--nictype1", "Am79C973"])
 
 	# Forward a port from the guest to the host, which allows for outside
 	# computers to access the VM, whereas host only networking does not.
