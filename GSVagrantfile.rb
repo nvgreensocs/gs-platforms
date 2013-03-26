@@ -320,9 +320,9 @@ class GSProject
       Chef::Config[:file_cache_path]="#{pwd}/tmp/"
       Chef::Config[:cookbook_path]=["#{pwd}/cookbooks", "#{pwd}/"]
       Chef::Config[:json_attribs] = "#{pwd}/tmp/dna.json"
-      FileUtils.mkdir_p '#{pwd}/tmp'
-      FileUtils.mkdir_p '#{pwd}/bash.profile.d'
-      FileUtils.touch '#{pwd}/bash.profile.d/empty'
+      FileUtils.mkdir_p "#{pwd}/tmp"
+      FileUtils.mkdir_p "#{pwd}/bash.profile.d"
+      FileUtils.touch "#{pwd}/bash.profile.d/empty"
       File.open("#{pwd}/tmp/dna.json", mode='w') do |f|
 	f.puts '{"run_list": ['
 	@cookbooks.each {|c| f.puts "\"recipe[#{c}]\","}
